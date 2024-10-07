@@ -1,13 +1,13 @@
 from rest_framework import generics, permissions
 from .models import Order
-from .serializer import OrderSerializer, CreateOrderSerializer
+from .serializer import OrderSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
 class OrderListCreateAPIView(generics.ListCreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    parser_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)  # Исправлено
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

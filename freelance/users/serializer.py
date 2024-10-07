@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from .models import user
+from .models import User
 from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = user
+        model = User
         fields = ('token')
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
     """
-    Creates a new user.
-    Email, username, and password are required.
+    Creates a new User.
+    Email, Username, and password are required.
     Returns a JSON web token.
     """
 
@@ -24,12 +24,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
-        model = user
+        model = User
         fields = ('email', 'username', 'password', 'token',
                   'is_superuser', 'is_freelancer', 'is_client')
 
     def create(self, validated_data):
-        return user.objects.create_user(**validated_data)
+        return User.objects.create_user(**validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
