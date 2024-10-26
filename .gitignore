@@ -1,8 +1,5 @@
 /.venv
 /freelance/freelance/__pycache__
 /freelance/users/__pycache__
-<<<<<<< HEAD
+/freelance/orders/__pycache__
 .base
-=======
-.base
->>>>>>> 872d5c856fc98223fabb97bd163cb23ab35a82a5
