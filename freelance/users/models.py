@@ -49,6 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_freelancer = models.BooleanField(default=False)
     is_client = models.BooleanField(default=False)
+    is_gold_member = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
     objects = UserManager()
