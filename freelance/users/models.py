@@ -6,10 +6,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
-
-from django.contrib.auth.models import BaseUserManager
-
-
 class UserManager(BaseUserManager):
     def _create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -36,24 +32,18 @@ class UserManager(BaseUserManager):
 
         return self._create_user(username, email, password, **extra_fields)
 
-
-class User(AbstractBaseUser, PermissionsMixin):
-
-    username = models.CharField(db_index=True, max_length=255, unique=True)
-
+class BaseUser(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(
         validators=[validators.validate_email],
         unique=True,
-        blank=False
     )
     is_staff = models.BooleanField(default=False)
-    is_freelancer = models.BooleanField(default=False)
-    is_client = models.BooleanField(default=False)
+    is_banned = models.BooleanField(default=False)
     is_gold_member = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
     objects = UserManager()
-
     def _generate_jwt_token(self):
         dt = datetime.now() + timedelta(days=60)
 
@@ -67,3 +57,35 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def token(self):
         return self._generate_jwt_token()
+    
+    
+class Freelancer(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    services_sector = models.Choices()
+    rating = models.FloatField(max_length=3)
+    def __str__(self):
+        return self.user.username
+    
+    
+class Customer(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.FloatField(max_length=3)
+    def __str__(self):
+        return self.user.username
+    
+class ReviewCF(models.Model):
+    reviewer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    recepient = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    text = models.TextField(default="")
+    rating = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.recepient.user.username}: {self.rating}"
+class ReviewFC(models.Model):
+    reviewer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    recepient = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    text = models.TextField(default="")
+    rating = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.recepient.user.username}: {self.rating}"
