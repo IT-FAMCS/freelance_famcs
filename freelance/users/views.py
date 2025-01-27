@@ -2,13 +2,13 @@ from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from django.conf import settings
 import jwt
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import models
 
 from .models import User
-from .serializer import LoginSerializer
+from .serializer import *
 from .serializer import RegistrationSerializer, UserSerializer
 
 
@@ -41,7 +41,7 @@ class LoginAPIView(APIView):
 
 
 class UserAPIView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminUser,)
     serializer_class = UserSerializer
 
 
@@ -74,3 +74,20 @@ class VerifyTokenView(APIView):
         serializer = UserSerializer(user)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+class FreelacerCreateView(APIView):
+    permission_classes = (AllowAny,)
+    serializer_class = FreelaceSerializer
+    
+    
+    def post(self, request, *args):
+        #add user instance to create
+        return self.create(request, *args)
+    
+class CustomerCreateView(APIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CustomSerializer
+    
+    
+    def post(self, request, *args):
+        #add user instance to create
+        return self.create(request, *args)

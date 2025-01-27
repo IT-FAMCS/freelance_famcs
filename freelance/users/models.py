@@ -61,14 +61,19 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     
 class Freelancer(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=25)
+    surname = models.CharField(max_length=50)
     services_sector = models.Choices()
     rating = models.FloatField(max_length=3)
+    resume = models.TextField(blank=True)
     def __str__(self):
         return self.user.username
-    
+
     
 class Customer(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=25)
+    surname = models.CharField(max_length=50)
     rating = models.FloatField(max_length=3)
     def __str__(self):
         return self.user.username

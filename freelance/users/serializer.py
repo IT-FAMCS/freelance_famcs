@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import User
+from .models import *
 from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = BaseUser
         fields = ('token')
 
 
@@ -24,12 +24,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
-        model = User
+        model = BaseUser
         fields = ('email', 'username', 'password', 'token',
                   'is_superuser', 'is_freelancer', 'is_client', 'is_golden_member')
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        return BaseUser.objects.create_user(**validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
@@ -69,3 +69,23 @@ class LoginSerializer(serializers.Serializer):
         return {
             'token': user.token,
         }
+
+class FreelaceSerializer(serializers.Serializer):
+    class Meta:
+        model = Freelancer
+        fields = '__all__'
+        
+class CustomSerializer(serializers.Serializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+
+class RivewCFSerializer(serializers.Serializer):
+    class Meta:
+        model = ReviewCF
+        fields = '__all__'
+
+class RivewFCSerializer(serializers.Serializer):
+    class Meta:
+        model = ReviewFC
+        fields = '__all__'

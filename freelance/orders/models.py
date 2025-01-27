@@ -1,19 +1,13 @@
 from django.db import models
 from django.conf import settings
+from users.models import Customer, Freelancer
 
 
 class Order(models.Model):
     client = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        Customer,
         on_delete=models.CASCADE,
         related_name='client_orders',
-    )
-    freelancer = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='freelancer_orders',
-        null=True,
-        blank=True,
     )
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -34,3 +28,17 @@ class Order(models.Model):
 
     def __str__(self):
         return self.title
+
+class AcceptedOrder(models.Model):
+    order = models.ForeignKey(
+        Order, 
+        on_delete=models.CASCADE, 
+        related_name="accepted-order"
+        )
+    freelancer = models.ForeignKey(
+        Freelancer, 
+        on_delete=models.CASCADE
+        )
+    
+    def __str__(self):
+        return self.order.title
