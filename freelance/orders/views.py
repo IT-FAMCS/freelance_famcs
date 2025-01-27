@@ -1,7 +1,11 @@
 from rest_framework import generics, permissions
 from .models import Order
-from .serializer import OrderSerializer
+from .serializer import *
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from permissions import FreelacerPermission
+from rest_framework.response import Response
+
 
 
 class OrderCreateAPIview(generics.CreateView):
@@ -16,17 +20,25 @@ class OrderCreateAPIview(generics.CreateView):
 class OrderDetailView(generics.RetrieveUpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    lookup_field = "id"
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
-    def get_queryset(self):
-        user = self.request.user
-        queryset = super().get_queryset()
-        status = self.request.query_params.get('status', None)
-
-        if status:
-            queryset = queryset.filter(status=status)
-
-        if getattr(user, 'is_freelancer', False):
-            return queryset.filter(freelancer=user)
-
-        return queryset.filter(client=user)
+class AcceptedOrderCreateView(APIView):
+    permission_classes = [FreelacerPermission]
+    serializer_class =  AcceptedOrderSerializer
+    
+    def perform_create(self, serializer, request, *args, **kwargs):
+        #Order instance
+        serializer.save(freelcer=self.request.user)
+    
+class AcceptedOrderDetailedView(APIView):
+    queryset = AcceptedOrder.objects.all()
+    serializer_class = AcceptedOrderSerializer
+    lookup_field = "order.id"
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

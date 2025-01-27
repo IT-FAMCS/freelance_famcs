@@ -4,6 +4,7 @@ from users.models import Customer, Freelancer
 
 
 class Order(models.Model):
+    id = models.IntegerField(unique=True)
     client = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
