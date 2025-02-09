@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: freelance
     volumes:
-      - ./users
-      - ./orders
+      - /users
+      - /orders
       - ./scripts/start.sh:/start.sh
     ports:
       - "8000:8000"
