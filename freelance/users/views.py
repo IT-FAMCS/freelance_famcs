@@ -74,20 +74,31 @@ class VerifyTokenView(APIView):
         serializer = UserSerializer(user)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-class FreelacerCreateView(APIView):
+    
+class CreateFreelancer(APIView):
     permission_classes = (AllowAny,)
     serializer_class = FreelaceSerializer
-    
-    
+
     def post(self, request, *args):
-        #add user instance to create
-        return self.create(request, *args)
-    
-class CustomerCreateView(APIView):
+        self.create(request,user=self.request.user, *args)
+
+class CreateCustomer(APIView):
     permission_classes = (AllowAny,)
     serializer_class = CustomSerializer
-    
-    
+
     def post(self, request, *args):
-        #add user instance to create
-        return self.create(request, *args)
+        self.create(request,user=self.request.user, *args)
+
+class RivewCFCreate(APIView):
+    permission_classes = (AllowAny,) #Dev
+    serializer_class = RivewCFSerializer
+
+    def post(self, request, *args):
+        self.create(request, customer=self.request.user, *args)
+
+class RivewFCCreate(APIView):
+    permission_classes = (AllowAny,) #Dev
+    serializer_class = RivewFCSerializer
+
+    def post(self, request, *args):
+        self.create(request, freelancer=self.request.user, *args)
