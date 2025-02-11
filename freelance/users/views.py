@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import models
 
-from .models import User
-from .serializer import *
-from .serializer import RegistrationSerializer, UserSerializer
+from users.models import BaseUser
+from users.serializer import *
+from users.serializer import RegistrationSerializer, UserSerializer
 
 
 class RegistrationAPIView(APIView):

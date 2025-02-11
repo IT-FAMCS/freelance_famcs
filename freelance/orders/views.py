@@ -3,12 +3,12 @@ from .models import Order
 from .serializer import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from permissions import FreelacerPermission
+from orders.permissions import FreelacerPermission
 from rest_framework.response import Response
 
 
 
-class OrderCreateAPIview(generics.CreateView):
+class OrderCreateAPIview(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]

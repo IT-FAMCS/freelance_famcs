@@ -4,7 +4,7 @@ from users.models import Customer, Freelancer
 
 
 class Order(models.Model):
-    id = models.IntegerField(unique=True)
+    id = models.IntegerField(unique=True, primary_key=True)
     client = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
@@ -34,7 +34,7 @@ class AcceptedOrder(models.Model):
     order = models.ForeignKey(
         Order, 
         on_delete=models.CASCADE, 
-        related_name="accepted-order"
+        related_name="accepted_order"
         )
     freelancer = models.ForeignKey(
         Freelancer, 

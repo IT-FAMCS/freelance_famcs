@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import jwt
+from users.choises.service_choises import SERVICE_EN
 from django.core import validators
 from django.db import models
 from django.conf import settings
@@ -41,6 +42,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
     is_gold_member = models.BooleanField(default=False)
+    telegram = models.TextField(blank=True)
+    watsup = models.TextField(blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
     objects = UserManager()
@@ -63,7 +66,7 @@ class Freelancer(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=25)
     surname = models.CharField(max_length=50)
-    services_sector = models.Choices()
+    services_sector = models.TextField(choices=SERVICE_EN)
     rating = models.FloatField(max_length=3)
     resume = models.TextField(blank=True)
     def __str__(self):
